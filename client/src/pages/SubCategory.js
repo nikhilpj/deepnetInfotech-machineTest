@@ -2,24 +2,31 @@ import React, { useState } from 'react'
 import axios from '../axios/instance'
 import { Grid, Paper, TextField, Button, } from "@mui/material";
 import NavBar from '../components/Navbar';
+import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Category = ()=>{
-    const [category,setCategory] = useState('')
-    const handleCategory = async(e)=>{
+const SubCategory = ()=>{
+    const {id} = useParams()
+    const [subCategory,setSubCategory] = useState('')
+    const handleSubCategory = async(e)=>{
         e.preventDefault()
-        console.log('category',category)
+        try {
+            console.log('subcategory',subCategory)
+        console.log("id",id)
         const response =await axios({
             method:'post',
-            url:'/addcategory',
+            url:`/add/subcategory/${id}`,
             data:{
-                category:category
+                subCategory:subCategory
             }
         })
-        console.log("response after adding category",response)
-      
-          toast("category added to database")
+        console.log("response after adding subcategory",response)
+        toast("added subcategory")
+        } catch (error) {
+            console.log("error",error)
+            toast(error.message)
+        }
         
     }
     const paperStyle = {
@@ -36,18 +43,18 @@ const Category = ()=>{
      < NavBar/>
     <Paper elevation={10} style={paperStyle}>
     <Grid align="center" sx={{marginTop:'3px'}}>
-          <h2>Add Category</h2>
+          <h2>Add SubCategory</h2>
         </Grid>
     
-    <form onSubmit={handleCategory}>
+    <form onSubmit={handleSubCategory}>
     <TextField
           size="small"
-          label="Add Category"
+          label="Add Sub-Category"
           fullWidth
           required
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => setSubCategory(e.target.value)}
           style={BtnStyle}
-          value={category}
+          value={subCategory}
         />
         <Button variant="contained" color="primary" fullWidth style={BtnStyle} type="submit">
           Submit
@@ -60,4 +67,4 @@ const Category = ()=>{
     </>)
 }
 
-export default Category
+export default SubCategory

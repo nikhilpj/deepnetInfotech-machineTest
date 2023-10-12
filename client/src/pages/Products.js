@@ -2,6 +2,8 @@ import React, { useState ,useEffect} from "react";
 import { Grid, Paper, TextField, Button, Typography,Select,MenuItem ,InputLabel,FormControl} from "@mui/material";
 import axios from '../axios/instance'
 import NavBar from "../components/Navbar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Products =()=>{
     const [name,setName] = useState('')
@@ -36,17 +38,25 @@ const Products =()=>{
 
       const handleProducts=async(e)=>{
         e.preventDefault()
-        const response =await axios({
-          method:'post',
-          url:'/addproduct',
-          data:{
-            name:name,
-            price:price,
-            category:category,
-            image:image
-          }
-        })
-        console.log("response after adding product",response)
+
+        try {
+          const response =await axios({
+            method:'post',
+            url:'/addproduct',
+            data:{
+              name:name,
+              price:price,
+              category:category,
+              image:image
+            }
+          })
+          console.log("response after adding product",response)
+          toast("product added")
+        } catch (error) {
+          console.log(error)
+          toast("internal server error")
+        }
+     
         
 
       }
@@ -126,6 +136,7 @@ const Products =()=>{
           Submit
         </Button>
     </form>
+    <ToastContainer />
     </Paper>
     </Grid>
     

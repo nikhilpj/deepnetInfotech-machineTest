@@ -9,9 +9,9 @@ const NavBar = () => {
     <div className="container">
       <div className="wrapper">
         <div className="left">
-        <Typography variant="h6" gutterBottom>
+       <Link to={'/products'} style={{textDecoration:'none',color:'white'}}><Typography variant="h6" gutterBottom>
         Add products
-      </Typography>
+      </Typography></Link> 
        
         </div>
         <div className="center">
@@ -20,9 +20,9 @@ const NavBar = () => {
       </Typography></Link>
         </div>
         <div className="right">
-        <Typography variant="h6" gutterBottom>
-        Add category
-      </Typography>
+        <Link to={'/allcategory'} style={{textDecoration:'none',color:'white'}}> <Typography variant="h6" gutterBottom>
+        view category
+      </Typography></Link>
        </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 const categoryCollection = require("../models/categoryModel");
 const productCollection = require("../models/productModel")
+const subCategoryCollection = require('../models/subCategoryModel')
 const cloudinaryModule = require("cloudinary");
 const cloudinary = cloudinaryModule.v2;
 require("dotenv").config();
@@ -54,12 +55,63 @@ module.exports = {
 
   getCategories:async(req,res)=>{
     try {
-        const data = await categoryCollection.find({})
-        res.status(200).json({data:data,message:"data sent successfully"})
+        const data = await categoryCollection.find({}) 
+        const subdata = await subCategoryCollection.find({})
+        
+        const categorydata = data.concat(subdata)
+        
+        res.status(200).json({data:categorydata,message:"data sent successfully"})
     } catch (error) {
         console.log("error",error)
         res.status(500).json({message:"internal server error"})
     }
     
+  },
+
+  postSubCategory:async(req,res)=>{
+    try {
+      console.log("id",req.params.id)
+      console.log("req.body",req.body)
+      const data = await subCategoryCollection.create({
+        parentId:req.params.id,
+        name:req.body.subCategory
+      })
+      res.status(200).json({data:data,message:"data successfully created"})
+    } catch (error) {
+      console.log("error",error)
+      res.status(500).json({message:"internal server error"})
+    }
+    
+
+  },
+
+  getDetails:async(req,res)=>{
+    try {
+      console.log("parent category",req.params.id)
+      let data =await subCategoryCollection.find({parentId:req.params.id})
+      res.status(200).json({data:data,message:"data successfully fetched"})
+    } catch (error) {
+      console.log("error ",error)
+      res.status(500).json({message:"internal server error"})
+    }
+    
+  },
+
+  getProducts:async(req,res)=>{
+    try {
+      const detail = await categoryCollection.findOne({_id:req.params.id})
+      let products 
+  
+      if(detail)
+      {
+         products = await productCollection.find({category:detail.name})
+        console.log("products",products)
+        res.status(200).json({products:products,message:"products send"})
+      }
+    } catch (error) {
+      console.log("error",error)
+      res.status(500).json({message:"internal server error"})
+    }
+   
   }
 };
